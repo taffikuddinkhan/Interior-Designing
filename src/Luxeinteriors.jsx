@@ -40,9 +40,10 @@ function useInView(ref) {
     const [inView, setInView] = useState(false);
     useEffect(() => {
         const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold: 0.2 });
-        if (ref.current) obs.observe(ref.current);
+        const current = ref.current;
+        if (current) obs.observe(current);
         return () => obs.disconnect();
-    }, []);
+    }, [ref]);
     return inView;
 }
 
@@ -680,10 +681,12 @@ function TestimonialsSection() {
         { name: "Sneha Reddy", role: "Homeowner, Bangalore", rating: 5, text: "From the first consultation to the final delivery, the experience was seamless. The Scandinavian kitchen they designed has become the heart of our home.", avatar: "SR" },
         { name: "Vikram Singh", role: "Villa Owner, Goa", rating: 5, text: "The luxury villa project was a dream come true. LuxeStudio's creativity and craftsmanship are truly world-class. Guests constantly ask who designed it.", avatar: "VS" },
     ];
+    // NEW
     useEffect(() => {
-        const t = setInterval(() => setActive(a => (a + 1) % testimonials.length), 5000);
+        const len = testimonials.length;
+        const t = setInterval(() => setActive(a => (a + 1) % len), 5000);
         return () => clearInterval(t);
-    }, []);
+    }, [testimonials.length]);
     return (
         <section id="testimonials" ref={ref} style={{ background: "#0D0D0D", padding: "120px 2rem", fontFamily: FONTS.body }}>
             <div style={{ maxWidth: 900, margin: "0 auto" }}>
